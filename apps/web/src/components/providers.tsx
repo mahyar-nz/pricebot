@@ -20,7 +20,17 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState('light');
   const setOrganizationId = (id: string) => { setOrg(id); localStorage.setItem('pricing.organization', id); };
   const refreshConfig = useCallback(async () => {
-    try { const result = await api('/public/config'); setConfig(result); setConfigError(''); }
+    try {
+      const result = await fetch('/service-config', { cache: 'no-store' })
+        .then(async response => {
+          if (!response.ok) throw new Error('Service configuration unavailable');
+          const payload = await response.json();
+          return payload.data ?? payload;
+        })
+        .catch(() => api('/public/config'));
+      setConfig(result);
+      setConfigError('');
+    }
     catch { setConfigError('ارتباط با سرویس برقرار نشد. برای استفاده از امکانات، سرویس API را اجرا کنید.'); }
   }, []);
   const refreshUser = useCallback(async () => {

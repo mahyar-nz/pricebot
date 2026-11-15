@@ -1,0 +1,24 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "api": {
+      "root": "apps/api",
+      "framework": "nestjs",
+      "entrypoint": "src/main.ts",
+      "buildCommand": "pnpm --filter @pricing/core build && pnpm build",
+      "devCommand": "pnpm --filter @pricing/core build && pnpm db:generate && pnpm dev"
+    },
+    "web": {
+      "root": "apps/web",
+      "framework": "nextjs",
+      "devCommand": "pnpm exec next dev",
+      "bindings": [
+        { "type": "service", "service": "api", "format": "url", "env": "PRICEBOT_API_URL" }
+      ]
+    }
+  },
+  "rewrites": [
+    { "source": "/api/v1/:path*", "destination": { "service": "api" } },
+    { "source": "/(.*)", "destination": { "service": "web" } }
+  ]
+}

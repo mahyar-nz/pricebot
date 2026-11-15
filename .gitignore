@@ -12,6 +12,7 @@ apps/api/src/generated/
 *.zip
 !apps/web/public/downloads/pricing-bridge-0.1.0.zip
 test-results/
+.vercel/
 *.tsbuildinfo
 apps/web/public/fonts/IRANSansX*.woff2
 docs/evidence/fixbox-torob-connection.jpg
