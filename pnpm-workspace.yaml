@@ -1,0 +1,17 @@
+packages:
+  - apps/*
+  - packages/*
+allowBuilds:
+  '@embedded-postgres/linux-x64': true
+  '@embedded-postgres/windows-x64': true
+  '@nestjs/core': true
+  '@prisma/engines': true
+  esbuild: true
+  msgpackr-extract: true
+  prisma: true
+  sharp: true
+minimumReleaseAgeExclude:
+  - '@eslint/config-array@0.23.6'
+  - eslint@10.15.0
+  - lucide-react@1.73.0
+

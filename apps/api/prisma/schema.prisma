@@ -1,0 +1,266 @@
+generator client {
+  provider = "prisma-client"
+  output = "../src/generated/prisma"
+  moduleFormat = "esm"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id String @id @default(uuid())
+  name String
+  email String? @unique
+  phone String? @unique
+  passwordHash String?
+  emailVerifiedAt DateTime?
+  phoneVerifiedAt DateTime?
+  platformRole String @default("USER")
+  createdAt DateTime @default(now())
+  sessions Session[]
+  memberships Membership[]
+}
+
+model Session {
+  id String @id @default(uuid())
+  tokenHash String @unique
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  lastSeenAt DateTime @default(now())
+  @@index([userId, expiresAt])
+}
+
+model OtpChallenge {
+  id String @id @default(uuid())
+  phone String
+  purpose String
+  verifier String
+  attempts Int @default(0)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  consumedAt DateTime?
+  deliveryStatus String @default("pending")
+  @@index([phone, purpose, createdAt])
+}
+
+model RateLimit {
+  key String @id
+  count Int
+  windowStart DateTime
+}
+
+model Organization {
+  torobConnection TorobConnection?
+  id String @id @default(uuid())
+  name String
+  emergencyStop Boolean @default(false)
+  createdAt DateTime @default(now())
+  memberships Membership[]
+  stores Store[]
+  products Product[]
+  observations Observation[]
+  rules PriceRule[]
+  recommendations Recommendation[]
+  executions PriceExecution[]
+  subscription Subscription?
+  audits AuditLog[]
+  invoices Invoice[]
+}
+
+model TorobConnection {
+  organizationId String @id
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  credentialCiphertext String
+  domain String?
+  verifiedAt DateTime?
+  updatedAt DateTime @updatedAt
+}
+
+model Membership {
+  id String @id @default(uuid())
+  userId String
+  organizationId String
+  role String @default("VIEWER")
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  @@unique([userId, organizationId])
+  @@index([organizationId])
+}
+
+model Store {
+  id String @id @default(uuid())
+  organizationId String
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name String
+  url String
+  connector String @default("woocommerce")
+  currency String @default("IRR")
+  credentialCiphertext String
+  status String @default("awaiting_validation")
+  mode String @default("MONITOR")
+  enabled Boolean @default(true)
+  lastSyncedAt DateTime?
+  lastError String?
+  createdAt DateTime @default(now())
+  products Product[]
+  @@index([organizationId])
+}
+
+model Product {
+  id String @id @default(uuid())
+  organizationId String
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  storeId String?
+  store Store? @relation(fields: [storeId], references: [id], onDelete: SetNull)
+  externalId String?
+  parentExternalId String?
+  title String
+  sku String
+  brand String?
+  category String?
+  attributes Json @default("{}")
+  currentPrice Decimal @db.Decimal(24, 4)
+  costPrice Decimal @db.Decimal(24, 4)
+  minPrice Decimal @db.Decimal(24, 4)
+  maxPrice Decimal? @db.Decimal(24, 4)
+  currency String @default("IRR")
+  stock Int @default(0)
+  version Int @default(1)
+  lastPriceChangeAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  observations Observation[]
+  rules PriceRule[]
+  recommendations Recommendation[]
+  executions PriceExecution[]
+  @@unique([organizationId, sku])
+  @@unique([storeId, externalId])
+  @@index([organizationId, updatedAt])
+}
+
+model Observation {
+  id String @id @default(uuid())
+  organizationId String
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  productId String
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  marketplace String
+  sellerName String
+  price Decimal @db.Decimal(24, 4)
+  currency String
+  inStock Boolean @default(true)
+  source String @default("manual_import")
+  sourceUrl String?
+  matchVerified Boolean @default(false)
+  verifiedBy String?
+  verifiedAt DateTime?
+  observedAt DateTime
+  createdAt DateTime @default(now())
+  @@index([organizationId, productId, observedAt])
+}
+
+model PriceRule {
+  id String @id @default(uuid())
+  organizationId String
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  productId String?
+  product Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name String
+  strategy String
+  config Json @default("{}")
+  enabled Boolean @default(true)
+  version Int @default(1)
+  createdAt DateTime @default(now())
+  recommendations Recommendation[]
+  @@index([organizationId])
+}
+
+model Recommendation {
+  id String @id @default(uuid())
+  organizationId String
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  productId String
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  ruleId String
+  rule PriceRule @relation(fields: [ruleId], references: [id])
+  currentPrice Decimal @db.Decimal(24, 4)
+  candidatePrice Decimal? @db.Decimal(24, 4)
+  productVersion Int
+  ruleVersion Int
+  safetyPassed Boolean
+  reasons Json
+  explanation Json
+  status String @default("DRY_RUN")
+  approvedBy String?
+  approvedAt DateTime?
+  createdAt DateTime @default(now())
+  executions PriceExecution[]
+  @@index([organizationId, createdAt])
+}
+
+model PriceExecution {
+  id String @id @default(uuid())
+  organizationId String
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  productId String
+  product Product @relation(fields: [productId], references: [id])
+  recommendationId String @unique
+  recommendation Recommendation @relation(fields: [recommendationId], references: [id])
+  idempotencyKey String @unique
+  status String @default("PENDING")
+  oldPrice Decimal @db.Decimal(24, 4)
+  newPrice Decimal @db.Decimal(24, 4)
+  error String?
+  evidence Json?
+  createdAt DateTime @default(now())
+  completedAt DateTime?
+  @@index([organizationId, createdAt])
+}
+
+model Subscription {
+  id String @id @default(uuid())
+  organizationId String @unique
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  status String @default("TRIAL")
+  planName String @default("آزمایشی")
+  productLimit Int @default(100)
+  storeLimit Int @default(1)
+  memberLimit Int @default(3)
+  automationEnabled Boolean @default(false)
+  startsAt DateTime @default(now())
+  endsAt DateTime
+  pricingSnapshot Json @default("{}")
+}
+
+model Invoice {
+  id String @id @default(uuid())
+  organizationId String
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  amount Decimal @db.Decimal(24, 4)
+  currency String @default("IRR")
+  status String @default("PENDING")
+  createdAt DateTime @default(now())
+  @@index([organizationId, createdAt])
+}
+
+model PlatformSetting {
+  key String @id
+  value Json
+  version Int @default(1)
+  updatedAt DateTime @updatedAt
+}
+
+model AuditLog {
+  id String @id @default(uuid())
+  organizationId String?
+  organization Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId String?
+  action String
+  entityId String?
+  detail Json @default("{}")
+  createdAt DateTime @default(now())
+  @@index([organizationId, createdAt])
+}

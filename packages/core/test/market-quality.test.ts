@@ -1,0 +1,20 @@
+import { describe,it,expect } from 'vitest';
+import { calculatePrice, type PricingInput } from '../src/index.js';
+
+function fixture(): PricingInput {
+  // Facts independently read from the supplied sanitized prototype fixture; no live market access.
+  const prices=['16800000','13140000','13980000','14150000','14570000','14599000'];
+  return {currency:'IRT',currentPrice:'14570000',cost:'8000000',minPrice:'9000000',strategy:{type:'MATCH_LOWEST'},offers:prices.map((price,i)=>({id:`captured-${i}`,tenantId:'t',sellerId:`seller-${i}`,currency:'IRT',price,verified:true,inStock:true,observedAt:'2026-11-14T09:00:00Z'})),marketSnapshot:{currency:'IRT',reportedOffers:209,reportedSellers:111,sourceLowestPrice:'10300000',collectedAt:'2026-11-14T09:00:00Z'},safety:{tenantId:'t',now:'2026-11-14T10:00:00Z',maxDataAgeSeconds:7200,maxChangePercent:'25',subscriptionActive:true,automationEnabled:true,connectionEnabled:true,hasPermission:true,emergencyStop:false,matchVerified:true}};
+}
+describe('prototype coverage regressions',()=>{
+  it.each([-1, 1.5, NaN])('rejects invalid reported seller count %s', count => { const i=fixture(); i.marketSnapshot={currency:'IRT',reportedOffers:6,reportedSellers:count,collectedAt:'2026-11-14T09:00:00Z',terminalEvidence:'test-end'}; const r=calculatePrice(i); expect(r.safe).toBe(false); expect(r.evidence.market?.reportedSellers).toBeNull(); });
+  it('blocks inconsistent announced seller coverage',()=>{const i=fixture(); i.marketSnapshot={currency:'IRT',reportedOffers:6,reportedSellers:7,collectedAt:'2026-11-14T09:00:00Z',terminalEvidence:'test-end'}; expect(calculatePrice(i).evidence.market?.reasons).toContain('REPORTED_SELLER_COUNT_MISMATCH'); expect(calculatePrice(i).safe).toBe(false);});
+  it('blocks a source minimum higher than the observed minimum',()=>{const i=fixture(); i.marketSnapshot={currency:'IRT',reportedOffers:6,sourceLowestPrice:'15000000',collectedAt:'2026-11-14T09:00:00Z',terminalEvidence:'test-end'}; expect(calculatePrice(i).evidence.market?.reasons).toContain('SOURCE_LOWEST_CONTRADICTS_COLLECTED'); expect(calculatePrice(i).safe).toBe(false);});
+  it('treats a negative source minimum as invalid without crashing',()=>{const i=fixture(); i.marketSnapshot!.sourceLowestPrice='-1'; expect(calculatePrice(i).evidence.market?.reasons).toContain('INVALID_SOURCE_LOWEST_PRICE');});
+  it('preserves 209 reported versus six collected and 10,300,000 versus 13,140,000 toman',()=>{const r=calculatePrice(fixture()); expect(r.candidatePrice).toBe('13140000'); expect(r.safe).toBe(false); expect(r.evidence.market).toMatchObject({completeness:'PARTIAL',reportedOffers:209,collectedOffers:6,uniqueSellers:6,valid:6,filtered:0,stale:0,sourceLowestPrice:'10300000',collectedLowestPrice:'13140000'}); expect(r.evidence.market?.reasons).toContain('SOURCE_LOWEST_NOT_COLLECTED');});
+  it('does not turn announced counts into records',()=>{const r=calculatePrice(fixture()); expect(r.evidence.eligibleOfferIds).toHaveLength(6); expect(r.evidence.market?.collectedOffers).not.toBe(209);});
+  it('requires terminal evidence, equal counts, source consistency and freshness for completeness',()=>{const i=fixture(); i.marketSnapshot={currency:'IRT',reportedOffers:6,collectedAt:'2026-11-14T09:00:00Z',terminalEvidence:'test-end'}; expect(calculatePrice(i).safe).toBe(true); delete i.marketSnapshot.terminalEvidence; expect(calculatePrice(i).safe).toBe(false);});
+  it('unknown completeness permits only a qualified candidate',()=>{const i=fixture(); delete i.marketSnapshot; const r=calculatePrice(i); expect(r.candidatePrice).toBe('13140000'); expect(r.violations).toContain('MARKET_COMPLETENESS_UNKNOWN');});
+  it('does not show unknown capture as fresh',()=>{const i=fixture(); delete i.marketSnapshot!.collectedAt; expect(calculatePrice(i).evidence.market?.completeness).toBe('STALE');});
+  it('filters boolean and string boolean prices',()=>{const i=fixture(); i.offers[0]!.price=true as unknown as string; i.offers[1]!.price='True'; const r=calculatePrice(i); expect(r.evidence.market?.valid).toBe(4); expect(r.evidence.market?.filtered).toBe(2); expect(r.candidatePrice).toBe('13980000');});
+});

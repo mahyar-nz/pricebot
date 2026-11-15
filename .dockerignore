@@ -1,0 +1,10 @@
+node_modules
+**/node_modules
+.local
+.git
+.env
+apps/web/public/fonts/
+docs/evidence/fixbox-torob-connection.jpg
+**/dist
+**/.next
+**/.turbo

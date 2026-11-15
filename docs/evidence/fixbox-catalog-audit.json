@@ -1,0 +1,133 @@
+{
+  "checkedAt": "2026-11-15T17:51:54.108Z",
+  "store": "https://fixboxiran.com",
+  "method": "GET",
+  "priceWrites": 0,
+  "source": "woocommerce_public_store_api",
+  "scope": "provided_preview_sample_only",
+  "competitorCoverage": "not_tested",
+  "snapshotCurrency": "IRT",
+  "sampleCount": 10,
+  "receivedCount": 10,
+  "results": {
+    "MATCH": 8,
+    "VARIANT_REVIEW": 2,
+    "MISSING": 0,
+    "DIFFERENCE": 0
+  },
+  "comparisons": [
+    {
+      "id": 1290,
+      "title": "اکتان بوستر آرتمن نیترو پلاس ۶۰۰ میل",
+      "previewPrice": "1490000",
+      "livePrice": "1490000",
+      "currency": "IRT",
+      "priceMatches": true,
+      "stockMatches": true,
+      "priceRange": null,
+      "result": "MATCH"
+    },
+    {
+      "id": 962,
+      "title": "والولین 75W90",
+      "previewPrice": "2700000",
+      "livePrice": "2700000",
+      "currency": "IRT",
+      "priceMatches": true,
+      "stockMatches": true,
+      "priceRange": null,
+      "result": "VARIANT_REVIEW"
+    },
+    {
+      "id": 956,
+      "title": "والولین ادونس 5w30",
+      "previewPrice": "8500000",
+      "livePrice": "2100000",
+      "currency": "IRT",
+      "priceMatches": false,
+      "stockMatches": true,
+      "priceRange": {
+        "min": "2100000",
+        "max": "8500000"
+      },
+      "result": "VARIANT_REVIEW"
+    },
+    {
+      "id": 953,
+      "title": "شوینده سیستم سوخت چند کاره وی پی ریسینگ",
+      "previewPrice": "6990000",
+      "livePrice": "6990000",
+      "currency": "IRT",
+      "priceMatches": true,
+      "stockMatches": true,
+      "priceRange": null,
+      "result": "MATCH"
+    },
+    {
+      "id": 950,
+      "title": "پاور واش وی پی ریسینگ امریکا ۳.۷ لیتر (VP)",
+      "previewPrice": "15000000",
+      "livePrice": "15000000",
+      "currency": "IRT",
+      "priceMatches": true,
+      "stockMatches": true,
+      "priceRange": null,
+      "result": "MATCH"
+    },
+    {
+      "id": 946,
+      "title": "دست شور کارما کر",
+      "previewPrice": "700000",
+      "livePrice": "700000",
+      "currency": "IRT",
+      "priceMatches": true,
+      "stockMatches": true,
+      "priceRange": null,
+      "result": "MATCH"
+    },
+    {
+      "id": 944,
+      "title": "موتور شور بدونه اب 500 گرمی",
+      "previewPrice": "899000",
+      "livePrice": "899000",
+      "currency": "IRT",
+      "priceMatches": true,
+      "stockMatches": true,
+      "priceRange": null,
+      "result": "MATCH"
+    },
+    {
+      "id": 941,
+      "title": "موتور شور با آب 500 گرمی",
+      "previewPrice": "899000",
+      "livePrice": "899000",
+      "currency": "IRT",
+      "priceMatches": true,
+      "stockMatches": true,
+      "priceRange": null,
+      "result": "MATCH"
+    },
+    {
+      "id": 939,
+      "title": "محلول صفر شویی داخل کابیین 500 گرمی",
+      "previewPrice": "899000",
+      "livePrice": "899000",
+      "currency": "IRT",
+      "priceMatches": true,
+      "stockMatches": true,
+      "priceRange": null,
+      "result": "MATCH"
+    },
+    {
+      "id": 936,
+      "title": "واکس بدنه کارماکر 500 گرمی",
+      "previewPrice": "899000",
+      "livePrice": "899000",
+      "currency": "IRT",
+      "priceMatches": true,
+      "stockMatches": true,
+      "priceRange": null,
+      "result": "MATCH"
+    }
+  ]
+}

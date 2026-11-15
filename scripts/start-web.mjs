@@ -1,0 +1,15 @@
+import { cpSync, existsSync } from 'node:fs';
+import { spawn } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+import { resolve, dirname } from 'node:path';
+const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
+const web=resolve(root,'apps/web');
+const target=resolve(web,'.next/standalone/apps/web');
+if(!existsSync(resolve(target,'server.js'))) throw new Error('Build the web app before starting it.');
+cpSync(resolve(web,'public'),resolve(target,'public'),{recursive:true});
+cpSync(resolve(web,'.next/static'),resolve(target,'.next/static'),{recursive:true});
+const child=spawn(process.execPath,[resolve(target,'server.js')],{cwd:target,stdio:'inherit',env:{...process.env,PORT:process.env.WEB_PORT||'3000',HOSTNAME:process.env.WEB_HOST||'127.0.0.1'}});
+child.on('exit',code=>process.exit(code??1));
+child.on('error',()=>process.exit(1));
+process.on('SIGINT',()=>child.kill('SIGTERM'));
+process.on('SIGTERM',()=>child.kill('SIGTERM'));

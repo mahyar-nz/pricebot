@@ -1,0 +1,7 @@
+node_modules
+.next
+.turbo
+.local
+dist
+pnpm-lock.yaml
+apps/api/src/generated

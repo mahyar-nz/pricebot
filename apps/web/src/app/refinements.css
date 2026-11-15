@@ -1,0 +1,61 @@
+/* Layouts for current App Router components. */
+.brand>span:last-child{display:flex;flex-direction:column;min-width:0}
+.brand strong{line-height:1.5}.brand small{font-size:10px;line-height:1.6}
+.field{display:grid;gap:8px;min-width:0}.field>span{font-size:12px;font-weight:700}
+.field small{font-size:11px;color:var(--muted)}
+.form-stack{display:grid;gap:19px}.full{width:100%}
+.form-actions,.heading-actions{display:flex;gap:12px;flex-wrap:wrap}
+.text-button{background:none;border:0;color:var(--brand);padding:8px}
+.back-link{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:12px}
+.empty{text-align:center;padding:48px 22px;color:var(--muted)}
+.empty h3{color:var(--text);margin:16px 0 8px}.empty p{max-width:480px;margin:0 auto 20px}
+.empty-icon{display:inline-flex;padding:18px;border-radius:50%;background:var(--bg)}
+.modal-title{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px}
+:focus-visible{outline:3px solid var(--brand);outline-offset:4px}
+.notice svg{flex-shrink:0;margin-top:3px}.notice span{overflow-wrap:anywhere}
+.auth-page{min-height:100dvh;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.9fr);padding:0;align-items:stretch}
+.auth-main{padding:36px clamp(24px,5vw,90px)}
+.auth-main>header{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:35px}
+.auth-form-wrap{max-width:420px;margin:35px auto}
+.auth-form-wrap h1{font-size:30px;line-height:1.65;margin:12px 0}
+.auth-form-wrap>p{color:var(--muted);margin:0 0 26px}
+.auth-symbol{display:inline-flex;padding:13px;border-radius:13px;background:#e4f5ee;color:#087a62}
+.auth-tabs{display:flex;gap:6px;background:var(--bg);padding:5px;border-radius:10px;margin:24px 0}
+.auth-tabs button{flex:1;border:0;border-radius:7px;padding:10px;background:transparent;color:var(--muted)}
+.auth-tabs button.active{background:var(--surface);color:var(--text);box-shadow:0 2px 7px #0001}
+.auth-form-wrap .auth-switch{margin:22px 0;text-align:center;font-size:12px}
+.auth-switch a,.auth-legal a{color:var(--brand)}.auth-legal{display:block;font-size:10px;color:var(--muted);text-align:center}
+.auth-aside{background:#123e38;color:#fff;display:flex;flex-direction:column;justify-content:center;padding:60px clamp(24px,5vw,90px);overflow:hidden}
+.auth-aside h2{font-size:clamp(28px,3vw,44px);line-height:1.8;margin:25px 0}
+.auth-aside h2 span{color:#80e1c2}.auth-aside p{color:#bfd6cf;max-width:390px}
+.auth-aside .eyebrow{color:#80e1c2}.aside-caption{font-size:11px;color:#bfd6cf;margin-top:35px}
+.auth-orbit{display:flex;margin-bottom:30px;color:#80e1c2}
+.auth-orbit>div{display:flex;padding:25px;border:1px solid #80e1c244;border-radius:50%}
+.connector-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.market-monogram{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:#e4f5ee;color:#087a62;font-size:22px}
+.connector-card ul{padding-right:18px;color:var(--muted);font-size:12px;min-height:85px}
+.connector-card li{margin-bottom:8px}.connector-capabilities{display:grid;gap:12px;border-top:1px solid var(--border);padding-top:17px;margin:18px 0;font-size:11px}
+.connector-capabilities>span{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.connector-capabilities strong{margin-right:auto;font-size:10px;font-weight:400}
+.calculator{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:30px;padding:0;margin-top:40px}
+.calculator-controls{display:grid;gap:25px;background:var(--surface);padding:30px;border:1px solid var(--border);border-radius:16px}
+.calculator-label{display:flex;align-items:center;gap:15px}.calculator-label h2{font-size:20px}.calculator-label p{font-size:12px;color:var(--muted)}
+.calculator-summary{background:#123e38;color:#fff;padding:32px;border-radius:16px;align-self:start}
+.calculator-summary h3{font-size:26px;line-height:1.8;margin:20px 0}
+.calculator-summary .eyebrow,.accent-text{color:#80e1c2}
+.quote-total{padding:18px 0 25px;display:flex;flex-direction:column}.quote-total strong{font-size:36px;overflow-wrap:anywhere}.quote-total span{color:#bfd6cf;font-size:12px}
+.calculator-summary dl>div{display:flex;justify-content:space-between;gap:20px;font-size:12px;padding:15px 0;border-bottom:1px solid #ffffff22}.calculator-summary dd{margin:0}
+.quote-explanation{font-size:11px;color:#bfd6cf;margin:25px 0}
+.calculator-summary p,.payment-note{font-size:11px;color:#bfd6cf;margin-top:18px}.payment-note{display:flex;align-items:center;gap:8px}
+.range-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}.range-heading input{width:120px}
+.segment-control,.market-options{display:flex;gap:8px;flex-wrap:wrap}
+.segment-control button,.market-options button{border:1px solid var(--border);background:var(--surface);color:var(--text);padding:9px 14px;border-radius:8px}
+.segment-control button.active,.market-options button.selected{border-color:var(--brand);background:#e4f5ee;color:#087a62}
+.segment-control small{display:block;font-size:9px}.market-options button{display:flex;align-items:center;gap:6px}
+.market-options button>span{display:flex;width:16px;height:16px;border:1px solid var(--border);border-radius:4px}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap;font-size:12px;margin:25px 0}.footer-note{font-size:10px;color:var(--muted);padding-top:20px}
+@media(max-width:900px){.auth-page{grid-template-columns:1fr}.auth-aside{display:none}.auth-main{padding:25px}.auth-form-wrap{margin:25px auto}.calculator{grid-template-columns:1fr}}
+@media(max-width:760px){.public-nav{position:relative}.public-header nav.open{display:flex;position:absolute;top:100%;left:12px;right:12px;flex-direction:column;align-items:stretch;padding:18px;gap:18px;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);z-index:80}.brand small{font-size:9px}.public-header .brand strong{font-size:12px}.nav-actions{gap:6px}.calculator-controls,.calculator-summary{padding:22px}.auth-main>header{margin-bottom:25px}.auth-form-wrap h1{font-size:27px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+.field-group{border:0;padding:0;margin:0}.field-group legend{font-size:12px;font-weight:700;margin-bottom:12px}.calculating{opacity:.5}.editorial-sections{display:grid;gap:22px;margin:35px 0}.editorial-sections section{display:flex;gap:22px}.editorial-index{color:var(--brand);font-size:23px}.editorial h2{font-size:20px}.editorial p{color:var(--muted);line-height:2.2}
+.modal-title h2{font-size:24px;line-height:1.6;margin:0}.modal-title .icon-button{flex-shrink:0}
